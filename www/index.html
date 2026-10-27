@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0f3d2e">
+<title>Tutto</title>
+<style>
+  :root {
+    --felt: #0f3d2e;
+    --felt-2: #145240;
+    --felt-3: #1b6a52;
+    --cream: #fbf6ea;
+    --cream-2: #f1e8d3;
+    --ink: #1f2a26;
+    --ink-soft: #5d6b65;
+    --gold: #e8b33a;
+    --gold-2: #f6d27a;
+    --red: #d9534f;
+    --line: #e2d7bd;
+    --radius: 18px;
+    --shadow: 0 10px 30px rgba(0,0,0,.25), 0 2px 6px rgba(0,0,0,.15);
+    --font: "Nunito", "Segoe UI Rounded", "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: var(--font);
+    color: var(--ink);
+    background:
+      radial-gradient(ellipse at 50% -10%, var(--felt-3) 0%, transparent 60%),
+      radial-gradient(circle at 20% 120%, #0b2e23 0%, transparent 50%),
+      var(--felt);
+    background-attachment: fixed;
+    overscroll-behavior: none;
+    user-select: none;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .07; z-index: 0;
+    background-image: radial-gradient(#fff 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+  .app {
+    position: relative; z-index: 1;
+    max-width: 640px; margin: 0 auto;
+    padding: calc(env(safe-area-inset-top, 0px) + 18px) 16px calc(env(safe-area-inset-bottom, 0px) + 28px);
+    min-height: 100%;
+  }
+
+  /* ---------- Header ---------- */
+  .brand { display: flex; align-items: center; gap: 12px; margin: 4px 0 18px; color: var(--cream); }
+  .brand h1 { margin: 0; font-size: 30px; font-weight: 900; letter-spacing: .5px; }
+  .brand small { display: block; font-size: 13px; opacity: .7; font-weight: 600; letter-spacing: .3px; }
+  .brand .spacer { flex: 1; }
+  .die {
+    width: 42px; height: 42px; border-radius: 10px; background: var(--cream);
+    box-shadow: inset 0 -3px 0 var(--cream-2), 0 4px 10px rgba(0,0,0,.3);
+    display: grid; grid-template: repeat(3,1fr) / repeat(3,1fr); padding: 6px; transform: rotate(-8deg);
+  }
+  .die i { width: 7px; height: 7px; border-radius: 50%; background: var(--felt); align-self: center; justify-self: center; }
+  .die i:nth-child(1){grid-area:1/1} .die i:nth-child(2){grid-area:1/3} .die i:nth-child(3){grid-area:2/2}
+  .die i:nth-child(4){grid-area:3/1} .die i:nth-child(5){grid-area:3/3}
+  .die.red i:nth-child(3) { background: var(--red); }
+
+  .icon-btn {
+    border: 0; background: rgba(255,255,255,.1); color: var(--cream); width: 42px; height: 42px; border-radius: 12px;
+    font-size: 20px; display: grid; place-items: center; cursor: pointer;
+  }
+  .icon-btn:active { background: rgba(255,255,255,.2); }
+
+  /* ---------- Cards ---------- */
+  .card {
+    background: var(--cream); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 18px; margin-bottom: 16px;
+  }
+  .card h2 { margin: 0 0 4px; font-size: 20px; font-weight: 900; }
+  .card p.sub { margin: 0 0 14px; color: var(--ink-soft); font-size: 14px; }
+
+  .screen.enter { animation: fadeIn .35s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    border: 0; border-radius: 14px; padding: 15px 18px; font: inherit; font-weight: 800; font-size: 17px;
+    cursor: pointer; transition: transform .08s ease, filter .15s; display: inline-flex; align-items: center;
+    justify-content: center; gap: 8px;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .45; pointer-events: none; }
+  .btn-primary { background: linear-gradient(180deg, var(--gold-2), var(--gold)); color: #3b2a05; box-shadow: 0 4px 0 #b9861f, 0 8px 18px rgba(0,0,0,.25); }
+  .btn-primary:active { box-shadow: 0 1px 0 #b9861f; transform: translateY(3px); }
+  .btn-felt { background: var(--felt-2); color: var(--cream); }
+  .btn-ghost { background: transparent; color: var(--cream); border: 2px solid rgba(251,246,234,.35); }
+  .btn-light { background: var(--cream-2); color: var(--ink); }
+  .btn-block { width: 100%; }
+  .row { display: flex; gap: 10px; }
+  .row > * { flex: 1; }
+
+  /* ---------- Avatar ---------- */
+  .avatar {
+    width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none;
+    color: #fff; font-weight: 900; font-size: 18px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.18);
+    text-transform: uppercase;
+  }
+  .avatar.lg { width: 64px; height: 64px; font-size: 28px; }
+  .avatar.sm { width: 28px; height: 28px; font-size: 13px; }
+
+  /* ---------- Setup ---------- */
+  .add-row { display: flex; gap: 10px; }
+  .input {
+    flex: 1; border: 2px solid var(--line); border-radius: 14px; padding: 14px 16px; font: inherit; font-size: 17px;
+    background: #fff; color: var(--ink); outline: none; user-select: text; min-width: 0;
+  }
+  .input:focus { border-color: var(--gold); }
+  .add-btn { flex: none; width: 54px; padding: 0; font-size: 26px; }
+  .player-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
+  .player-list li {
+    display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 12px; background: #fff;
+    border-radius: 14px; border: 1px solid var(--line); animation: fadeIn .25s ease;
+  }
+  .player-list .name { flex: 1; font-weight: 800; font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .player-list .num { color: var(--ink-soft); font-weight: 800; width: 18px; text-align: center; }
+  .mini-btn { border: 0; background: var(--cream-2); color: var(--ink-soft); border-radius: 10px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; }
+  .mini-btn:active { background: var(--line); }
+  .empty { text-align: center; color: var(--ink-soft); padding: 18px 0 4px; font-size: 14px; }
+
+  /* ---------- Starter ---------- */
+  .pick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+  .pick {
+    border: 3px solid transparent; background: #fff; border-radius: 18px; padding: 18px 10px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 10px; font: inherit; font-weight: 800; font-size: 16px;
+    color: var(--ink); box-shadow: 0 2px 0 var(--line); transition: transform .12s, border-color .12s;
+  }
+  .pick:active { transform: scale(.96); }
+  .pick.selected { border-color: var(--gold); background: #fff8e3; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(232,179,58,.35); }
+  .pick .nm { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pick.shuffle .avatar { animation: pulse .18s ease; }
+  @keyframes pulse { 50% { transform: scale(1.18); } }
+
+  /* ---------- Leader ---------- */
+  .leader {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #fff8e1, #f8e2a6 60%, #f1cd6b); padding: 18px;
+  }
+  .leader .lbl { font-size: 12px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: #8a6412; }
+  .leader .top { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
+  .leader .who { flex: 1; min-width: 0; }
+  .leader .who b { display: block; font-size: 24px; font-weight: 900; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .leader .who span { display: block; font-size: 14px; color: #7b5c15; font-weight: 700; }
+  .leader .pts { font-size: 34px; font-weight: 900; color: #5b3f00; font-variant-numeric: tabular-nums; }
+  .crown { position: absolute; right: -10px; top: -18px; font-size: 96px; opacity: .14; transform: rotate(18deg); }
+
+  .ranks { display: grid; gap: 10px; margin-top: 16px; }
+  .rank { display: grid; grid-template-columns: 22px 28px 1fr auto; align-items: center; gap: 10px; }
+  .rank .pos { font-weight: 900; color: #8a6412; text-align: center; }
+  .rank .bar-wrap { min-width: 0; }
+  .rank .nm { font-weight: 800; font-size: 14px; display: flex; justify-content: space-between; gap: 8px; }
+  .rank .nm span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rank .nm .rest { color: #8a6412; font-weight: 700; font-size: 12px; flex: none; }
+  .bar { height: 8px; border-radius: 6px; background: rgba(91,63,0,.12); overflow: hidden; margin-top: 4px; }
+  .bar > div { height: 100%; border-radius: 6px; transition: width .6s cubic-bezier(.2,.8,.2,1); }
+  .rank .val { font-weight: 900; font-variant-numeric: tabular-nums; min-width: 52px; text-align: right; }
+  .rank.turn .nm span:first-child::after { content: " 🎲"; }
+
+  /* ---------- Turn ---------- */
+  .turn-card { padding: 18px; }
+  .turn-head { display: flex; align-items: center; gap: 12px; }
+  .turn-head .t { flex: 1; min-width: 0; }
+  .turn-head .t small { display: block; color: var(--ink-soft); font-weight: 800; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  .turn-head .t b { font-size: 24px; font-weight: 900; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .round-pill { background: var(--felt); color: var(--cream); border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: 13px; flex: none; }
+  .score-in {
+    margin: 16px 0 12px; display: flex; align-items: center; background: #fff; border: 3px solid var(--line);
+    border-radius: 16px; padding: 4px 6px 4px 16px;
+  }
+  .score-in:focus-within { border-color: var(--gold); }
+  .score-in input {
+    flex: 1; border: 0; outline: none; font: inherit; font-size: 40px; font-weight: 900; color: var(--ink);
+    background: transparent; width: 100%; min-width: 0; font-variant-numeric: tabular-nums; user-select: text;
+  }
+  .score-in input::placeholder { color: #cfc4aa; }
+  .score-in .clear { border: 0; background: var(--cream-2); border-radius: 12px; width: 44px; height: 44px; font-size: 18px; color: var(--ink-soft); cursor: pointer; }
+  .chips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .chip {
+    border: 0; border-radius: 12px; padding: 12px 0; font: inherit; font-weight: 900; font-size: 15px; cursor: pointer;
+    background: var(--cream-2); color: var(--ink); box-shadow: 0 3px 0 var(--line);
+  }
+  .chip:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--line); }
+  .extras { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+  .extra {
+    border: 2px solid var(--line); background: #fff; border-radius: 12px; padding: 10px 4px; font: inherit; font-weight: 800;
+    font-size: 13px; cursor: pointer; color: var(--ink); line-height: 1.2;
+  }
+  .extra .e { display: block; font-size: 20px; margin-bottom: 2px; }
+  .extra.on { border-color: var(--gold); background: #fff6db; }
+  .extra:active { transform: scale(.97); }
+  .hint { min-height: 18px; font-size: 13px; color: var(--red); font-weight: 700; margin: 10px 2px 0; }
+  .hint.info { color: #8a6412; }
+  .submit-row { display: flex; gap: 10px; margin-top: 8px; }
+  .submit-row .btn-primary { flex: 1; }
+  .submit-row .btn-light { flex: none; }
+
+  /* ---------- Table ---------- */
+  .tbl-card { padding: 14px 0 6px; }
+  .tbl-card h2 { padding: 0 18px; }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 8px; }
+  table { border-collapse: separate; border-spacing: 0; width: 100%; font-variant-numeric: tabular-nums; }
+  th, td { padding: 8px 6px; text-align: center; white-space: nowrap; }
+  thead th { position: sticky; top: 0; background: var(--cream); font-size: 13px; font-weight: 900; border-bottom: 2px solid var(--line); vertical-align: bottom; }
+  thead th .avatar { margin: 0 auto 4px; }
+  thead th .hn { display: block; max-width: 80px; overflow: hidden; text-overflow: ellipsis; margin: 0 auto; }
+  th.r, td.r { position: sticky; left: 0; background: var(--cream); color: var(--ink-soft); font-weight: 900; width: 36px; padding-left: 14px; z-index: 1; }
+  tbody td { border-bottom: 1px solid var(--line); }
+  td .p { display: block; font-weight: 900; font-size: 16px; }
+  td .s { display: block; font-size: 11px; color: var(--ink-soft); font-weight: 700; }
+  td .p.zero { color: var(--red); }
+  td .tag { font-size: 10px; font-weight: 900; border-radius: 6px; padding: 1px 4px; margin-left: 2px; vertical-align: middle; }
+  td .tag.pm { background: #fde7c3; color: #8a5a00; }
+  td .tag.minus { background: #fbdcdc; color: var(--red); }
+  td.next { background: #fff6db; }
+  td.next .p { color: #c79a2a; }
+  tfoot td { font-weight: 900; font-size: 17px; background: var(--cream-2); border-top: 2px solid var(--line); }
+  tfoot td.r { background: var(--cream-2); font-size: 12px; }
+  tfoot td.lead { color: #8a5a00; }
+  tfoot td.lead::before { content: "👑 "; font-size: 13px; }
+
+  .foot-actions { display: flex; gap: 10px; margin-top: 4px; }
+  .foot-actions .btn { flex: 1; font-size: 15px; padding: 12px; }
+
+  /* ---------- Modal / Winner ---------- */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(5,25,18,.72); display: grid; place-items: center; padding: 16px; z-index: 50;
+    animation: fadeIn .25s ease; backdrop-filter: blur(3px);
+  }
+  .modal { width: 100%; max-width: 420px; background: var(--cream); border-radius: 24px; box-shadow: var(--shadow); padding: 22px; text-align: center; }
+  .modal h3 { margin: 0 0 6px; font-size: 22px; font-weight: 900; }
+  .modal p { margin: 0 0 18px; color: var(--ink-soft); }
+  .modal .stack { display: grid; gap: 10px; }
+  .winner .trophy { font-size: 64px; line-height: 1; animation: bounce 1.2s ease infinite; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .winner .wname { font-size: 30px; font-weight: 900; margin: 8px 0 2px; }
+  .winner .wpts { font-size: 18px; font-weight: 800; color: #8a6412; margin-bottom: 16px; }
+  .final { list-style: none; padding: 0; margin: 0 0 18px; text-align: left; display: grid; gap: 6px; }
+  .final li { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 12px; padding: 8px 12px; border: 1px solid var(--line); }
+  .final li b { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .final li .m { width: 24px; text-align: center; font-size: 18px; }
+  .final li span:last-child { font-weight: 900; font-variant-numeric: tabular-nums; }
+
+  canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 24px); transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--cream); padding: 12px 18px; border-radius: 14px; font-weight: 800; font-size: 14px;
+    opacity: 0; transition: .25s; z-index: 70; pointer-events: none; max-width: calc(100% - 32px); text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%); }
+
+  .bump { animation: bump .5s ease; }
+  @keyframes bump { 30% { transform: scale(1.12); } }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<canvas id="confetti"></canvas>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const VERSION = '1.1.0';
+  const TARGET = 6000;
+  const STORE_KEY = 'tutto-state-v1';
+  const COLORS = ['#e4572e', '#2e86ab', '#8e44ad', '#f39c12', '#16a085', '#d81b60', '#6d4c41', '#3949ab', '#7cb342', '#00897b'];
+
+  const fresh = () => ({ phase: 'setup', players: [], order: [], turns: [], winner: null, nextId: 1 });
+  let state = load();
+  let ui = { starter: null, entry: '', plusMinus: false, modal: null, hint: '' };
+
+  function load() {
+    try {
+      const s = JSON.parse(localStorage.getItem(STORE_KEY));
+      if (s && Array.isArray(s.players)) return Object.assign(fresh(), s);
+    } catch (e) {}
+    return fresh();
+  }
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmt = n => n.toLocaleString('de-DE');
+  const player = id => state.players.find(p => p.id === id);
+  const avatar = (p, cls = '') => `<div class="avatar ${cls}" style="background:${p.color}">${esc(p.name.trim().charAt(0) || '?')}</div>`;
+  const vibrate = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
+
+  function toast(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  // ---------- Spiel-Logik ----------
+  // Jeder Zug: { pid, pts, minus: [pid...] (Plus/Minus: Führende verlieren 1000), clover: bool }
+  function totalsAfter(n) {
+    const t = Object.fromEntries(state.order.map(id => [id, 0]));
+    state.turns.slice(0, n).forEach(turn => {
+      t[turn.pid] += turn.pts;
+      (turn.minus || []).forEach(id => { t[id] = Math.max(0, t[id] - 1000); });
+    });
+    return t;
+  }
+  const totals = () => totalsAfter(state.turns.length);
+  const currentPid = () => state.order[state.turns.length % state.order.length];
+  const currentRound = () => Math.floor(state.turns.length / state.order.length) + 1;
+
+  function ranking(t = totals()) {
+    return state.order
+      .map((id, i) => ({ id, pts: t[id], i }))
+      .sort((a, b) => b.pts - a.pts || a.i - b.i);
+  }
+  function leadersExcept(pid, t) {
+    const others = state.order.filter(id => id !== pid);
+    const max = Math.max(...others.map(id => t[id]));
+    // Wer selbst führt, bekommt nur die Punkte – niemand verliert etwas.
+    if (max <= 0 || t[pid] >= max) return [];
+    return others.filter(id => t[id] === max);
+  }
+
+  function submitTurn({ clover = false, skip = false } = {}) {
+    const pid = currentPid();
+    let pts = 0;
+    if (!clover && !skip) {
+      const raw = ui.entry.trim();
+      pts = raw === '' ? NaN : Number(raw);
+      if (!Number.isFinite(pts) || pts < 0) return setHint('Bitte Punkte eingeben (oder „Gepatzt“).');
+      if (pts % 50 !== 0) return setHint('Punkte gehen in Tutto immer in 50er-Schritten.');
+      if (pts > 20000) return setHint('Das sind verdächtig viele Punkte 😉');
+    }
+    const t = totals();
+    const minus = ui.plusMinus && !clover && !skip ? leadersExcept(pid, t) : [];
+    state.turns.push(skip ? { pid, pts: 0, skip: true } : { pid, pts, minus, clover });
+    ui.entry = ''; ui.plusMinus = false; ui.hint = '';
+    vibrate(20);
+
+    const after = totals();
+    if (clover || after[pid] >= TARGET) {
+      state.phase = 'end';
+      state.winner = pid;
+      ui.modal = 'win';
+      save(); render(); confetti();
+      vibrate([60, 40, 120]);
+      return;
+    }
+    save(); render();
+    const nxt = player(currentPid());
+    const msg = skip ? `${player(pid).name} setzt aus ⏸` : pts === 0 ? `${player(pid).name}: gepatzt 💥` : `${player(pid).name}: +${fmt(pts)}`;
+    toast(minus.length ? `${msg} · ${minus.map(id => player(id).name).join(', ')} −1000` : `${msg} → ${nxt.name} ist dran`);
+    const el = document.querySelector(`[data-total="${pid}"]`);
+    el && el.classList.add('bump');
+  }
+
+  function undo() {
+    if (!state.turns.length) return;
+    const last = state.turns.pop();
+    if (state.phase === 'end') { state.phase = 'game'; state.winner = null; }
+    ui.entry = last.pts ? String(last.pts) : '';
+    ui.plusMinus = !!(last.minus && last.minus.length);
+    ui.modal = null; ui.hint = '';
+    save(); render();
+    toast(`Letzter Eintrag von ${player(last.pid).name} zurückgenommen`);
+  }
+
+  function setHint(msg) { ui.hint = msg; vibrate(60); const h = $('#hint'); if (h) { h.textContent = msg; h.className = 'hint'; } }
+
+  // ---------- Render ----------
+  function render() {
+    const app = $('#app');
+    const html = { setup: renderSetup, start: renderStart, game: renderGame, end: renderGame }[state.phase]();
+    app.innerHTML = html + renderModal();
+    // Einblend-Animation nur beim Wechsel des Bildschirms, nicht bei jedem Eintrag
+    if (render.phase !== state.phase) $('.screen', app).classList.add('enter');
+    render.phase = state.phase;
+    bind();
+  }
+
+  function brand(right = '') {
+    return `<header class="brand">
+      <div class="die"><i></i><i></i><i></i><i></i><i></i></div>
+      <div><h1>Tutto</h1><small>Punkteblock · Ziel ${fmt(TARGET)} · v${VERSION}</small></div>
+      <div class="spacer"></div>${right}
+    </header>`;
+  }
+
+  function renderSetup() {
+    const list = state.players.map((p, i) => `
+      <li>
+        <span class="num">${i + 1}</span>${avatar(p)}
+        <span class="name">${esc(p.name)}</span>
+        <button class="mini-btn" data-act="up" data-id="${p.id}" ${i === 0 ? 'disabled style="opacity:.3"' : ''} aria-label="nach oben">▲</button>
+        <button class="mini-btn" data-act="del" data-id="${p.id}" aria-label="entfernen">✕</button>
+      </li>`).join('');
+    return `<div class="screen">${brand()}
+      <section class="card">
+        <h2>Wer spielt mit?</h2>
+        <p class="sub">Namen in Sitzreihenfolge eintragen – so wird später gewürfelt.</p>
+        <form class="add-row" id="addForm" autocomplete="off">
+          <input class="input" id="nameIn" placeholder="Name" maxlength="18" enterkeyhint="done">
+          <button class="btn btn-primary add-btn" type="submit" aria-label="hinzufügen">+</button>
+        </form>
+        ${state.players.length ? `<ul class="player-list">${list}</ul>` : `<div class="empty">Noch niemand am Tisch 🎲</div>`}
+      </section>
+      <button class="btn btn-primary btn-block" data-act="toStart" ${state.players.length < 2 ? 'disabled' : ''}>
+        ${state.players.length < 2 ? 'Mindestens 2 Spieler' : 'Weiter – Beginner wählen →'}
+      </button>
+    </div>`;
+  }
+
+  function renderStart() {
+    const picks = state.players.map(p => `
+      <button class="pick ${ui.starter === p.id ? 'selected' : ''}" data-act="pick" data-id="${p.id}">
+        ${avatar(p, 'lg')}<span class="nm">${esc(p.name)}</span>
+      </button>`).join('');
+    return `<div class="screen">${brand(`<button class="icon-btn" data-act="toSetup" aria-label="zurück">←</button>`)}
+      <section class="card">
+        <h2>Wer beginnt?</h2>
+        <p class="sub">Antippen – danach geht es reihum im Uhrzeigersinn.</p>
+        <div class="pick-grid" id="pickGrid">${picks}</div>
+      </section>
+      <div class="row">
+        <button class="btn btn-ghost" data-act="random">🎲 Zufall</button>
+        <button class="btn btn-primary" data-act="begin" ${ui.starter ? '' : 'disabled'}>Los geht's!</button>
+      </div>
+    </div>`;
+  }
+
+  function renderGame() {
+    const t = totals();
+    const rk = ranking(t);
+    const lead = rk[0], second = rk[1];
+    const curPid = state.phase === 'game' ? currentPid() : null;
+    const tie = rk.filter(r => r.pts === lead.pts).length > 1;
+
+    let leadText;
+    if (state.phase === 'end') leadText = `Gewinner mit ${fmt(lead.pts)} Punkten 🏆`;
+    else if (lead.pts === 0) leadText = 'Noch keine Punkte – viel Glück!';
+    else if (tie) leadText = `Gleichstand mit ${rk.filter(r => r.pts === lead.pts).slice(1).map(r => esc(player(r.id).name)).join(', ')}`;
+    else leadText = `+${fmt(lead.pts - second.pts)} vor ${esc(player(second.id).name)}</span><span>noch ${fmt(Math.max(0, TARGET - lead.pts))} bis zum Sieg`;
+
+    const ranks = rk.map((r, i) => {
+      const p = player(r.id);
+      const pct = Math.min(100, r.pts / TARGET * 100);
+      return `<div class="rank ${r.id === curPid ? 'turn' : ''}">
+        <span class="pos">${i + 1}</span>${avatar(p, 'sm')}
+        <div class="bar-wrap">
+          <div class="nm"><span>${esc(p.name)}</span><span class="rest">noch ${fmt(Math.max(0, TARGET - r.pts))}</span></div>
+          <div class="bar"><div style="width:${pct}%;background:${p.color}"></div></div>
+        </div>
+        <span class="val" data-total="${r.id}">${fmt(r.pts)}</span>
+      </div>`;
+    }).join('');
+
+    const leader = `<section class="card leader">
+      <div class="crown">👑</div>
+      <div class="lbl">${tie && lead.pts > 0 ? 'Geteilte Führung' : 'In Führung'}</div>
+      <div class="top">${avatar(player(lead.id), 'lg')}
+        <div class="who"><b>${esc(player(lead.id).name)}</b><span>${leadText}</span></div>
+        <div class="pts" data-total="${lead.id}">${fmt(lead.pts)}</div>
+      </div>
+      <div class="ranks">${ranks}</div>
+    </section>`;
+
+    let turn = '';
+    if (state.phase === 'game') {
+      const cp = player(curPid);
+      const pmTargets = leadersExcept(curPid, t);
+      turn = `<section class="card turn-card">
+        <div class="turn-head">${avatar(cp, 'lg')}
+          <div class="t"><small>Am Zug</small><b>${esc(cp.name)}</b></div>
+          <span class="round-pill">Runde ${currentRound()}</span>
+        </div>
+        <div class="score-in">
+          <input id="scoreIn" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="0" value="${esc(ui.entry)}" enterkeyhint="done" autocomplete="off">
+          <button class="clear" data-act="clear" aria-label="leeren">⌫</button>
+        </div>
+        <div class="chips">
+          ${[50, 100, 200, 500, 1000].map(v => `<button class="chip" data-act="add" data-v="${v}">+${v}</button>`).join('')}
+        </div>
+        <div class="extras">
+          <button class="extra" data-act="bust"><span class="e">💥</span>Gepatzt</button>
+          <button class="extra" data-act="skip"><span class="e">⏸</span>Aussetzer</button>
+          <button class="extra ${ui.plusMinus ? 'on' : ''}" data-act="pm"><span class="e">±</span>Plus/Minus</button>
+          <button class="extra" data-act="clover"><span class="e">🍀</span>Kleeblatt</button>
+        </div>
+        <div class="hint ${ui.plusMinus && !ui.hint ? 'info' : ''}" id="hint">${esc(ui.hint || (ui.plusMinus
+          ? (pmTargets.length ? `${pmTargets.map(id => player(id).name).join(', ')} verliert 1000 Punkte` : 'Niemand verliert Punkte (du führst selbst)')
+          : ''))}</div>
+        <div class="submit-row">
+          <button class="btn btn-light" data-act="undo" ${state.turns.length ? '' : 'disabled'} aria-label="rückgängig">↶</button>
+          <button class="btn btn-primary" data-act="submit">Eintragen ✓</button>
+        </div>
+      </section>`;
+    }
+
+    return `<div class="screen">${brand(`<button class="icon-btn" data-act="menu" aria-label="Menü">☰</button>`)}
+      ${leader}${turn}${renderTable(rk[0])}
+      <div class="foot-actions">
+        ${state.phase === 'end' ? `<button class="btn btn-primary" data-act="showWin">🏆 Ergebnis</button>` : ''}
+        <button class="btn btn-ghost" data-act="menu">Neues Spiel</button>
+      </div>
+    </div>`;
+  }
+
+  function renderTable(lead) {
+    const n = state.order.length;
+    const rounds = Math.max(1, Math.ceil((state.turns.length + (state.phase === 'game' ? 1 : 0)) / n));
+    const cumulative = [];
+    for (let k = 1; k <= state.turns.length; k++) cumulative.push(totalsAfter(k));
+    const t = totals();
+    const maxPts = Math.max(...Object.values(t));
+
+    const head = state.order.map(id => {
+      const p = player(id);
+      return `<th>${avatar(p, 'sm')}<span class="hn">${esc(p.name)}</span></th>`;
+    }).join('');
+
+    let body = '';
+    for (let r = rounds - 1; r >= 0; r--) {
+      body += `<tr><td class="r">${r + 1}</td>`;
+      for (let c = 0; c < n; c++) {
+        const k = r * n + c;
+        const turn = state.turns[k];
+        if (turn) {
+          const pid = turn.pid;
+          const cum = cumulative[k][pid];
+          const tags = (turn.clover ? '<span class="tag pm">🍀</span>' : '') +
+                       (turn.minus && turn.minus.length ? '<span class="tag pm">±</span>' : '');
+          // Wurden diesem Spieler in dieser Runde per Plus/Minus 1000 abgezogen?
+          const hit = state.turns.some((x, xi) => Math.floor(xi / n) === r && (x.minus || []).includes(pid));
+          const shown = turn.clover ? '🍀' : turn.skip ? '⏸' : turn.pts === 0 ? '✗' : fmt(turn.pts);
+          body += `<td><span class="p ${turn.pts === 0 && !turn.clover && !turn.skip ? 'zero' : ''}">${shown}${tags}${hit ? '<span class="tag minus">−1000</span>' : ''}</span><span class="s">Σ ${fmt(cum)}</span></td>`;
+        } else if (k === state.turns.length && state.phase === 'game') {
+          body += `<td class="next"><span class="p">🎲</span><span class="s">am Zug</span></td>`;
+        } else {
+          body += `<td><span class="s">·</span></td>`;
+        }
+      }
+      body += `</tr>`;
+    }
+
+    const foot = state.order.map(id =>
+      `<td class="${t[id] === maxPts && maxPts > 0 ? 'lead' : ''}">${fmt(t[id])}</td>`).join('');
+
+    return `<section class="card tbl-card">
+      <h2>Punktetabelle</h2>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th class="r">R</th>${head}</tr></thead>
+        <tbody>${body}</tbody>
+        <tfoot><tr><td class="r">Σ</td>${foot}</tr></tfoot>
+      </table></div>
+    </section>`;
+  }
+
+  function renderModal() {
+    if (ui.modal === 'menu') {
+      return `<div class="overlay" data-act="close"><div class="modal" data-stop>
+        <h3>Neues Spiel?</h3>
+        <p>Der aktuelle Spielstand geht dabei verloren.</p>
+        <div class="stack">
+          <button class="btn btn-primary" data-act="rematch">🔁 Gleiche Spieler</button>
+          <button class="btn btn-light" data-act="newPlayers">👥 Spieler ändern</button>
+          <button class="btn btn-light" data-act="close">Abbrechen</button>
+        </div>
+      </div></div>`;
+    }
+    if (ui.modal === 'clover') {
+      return `<div class="overlay" data-act="close"><div class="modal" data-stop>
+        <div style="font-size:52px">🍀</div>
+        <h3>Kleeblatt geschafft?</h3>
+        <p>${esc(player(currentPid()).name)} hat zweimal hintereinander Tutto gewürfelt und gewinnt sofort.</p>
+        <div class="stack">
+          <button class="btn btn-primary" data-act="cloverYes">Ja, gewonnen!</button>
+          <button class="btn btn-light" data-act="close">Abbrechen</button>
+        </div>
+      </div></div>`;
+    }
+    if (ui.modal === 'win' && state.phase === 'end') {
+      const w = player(state.winner);
+      const rk = ranking();
+      const medals = ['🥇', '🥈', '🥉'];
+      const last = state.turns[state.turns.length - 1];
+      return `<div class="overlay" data-act="close"><div class="modal winner" data-stop>
+        <div class="trophy">🏆</div>
+        <div style="display:flex;justify-content:center;margin-top:10px">${avatar(w, 'lg')}</div>
+        <div class="wname">${esc(w.name)} gewinnt!</div>
+        <div class="wpts">${last && last.clover ? 'mit dem Kleeblatt 🍀' : fmt(totals()[w.id]) + ' Punkte'} · ${currentRoundDone()} Runden</div>
+        <ul class="final">${rk.map((r, i) => `<li><span class="m">${medals[i] || (i + 1) + '.'}</span>${avatar(player(r.id), 'sm')}<b>${esc(player(r.id).name)}</b><span>${fmt(r.pts)}</span></li>`).join('')}</ul>
+        <div class="stack">
+          <button class="btn btn-primary" data-act="rematch">🔁 Revanche</button>
+          <div class="row">
+            <button class="btn btn-light" data-act="newPlayers">👥 Neue Spieler</button>
+            <button class="btn btn-light" data-act="undo">↶ Korrektur</button>
+          </div>
+          <button class="btn btn-light" data-act="close">Tabelle ansehen</button>
+        </div>
+      </div></div>`;
+    }
+    return '';
+  }
+  const currentRoundDone = () => Math.ceil(state.turns.length / state.order.length);
+
+  // ---------- Events ----------
+  function bind() {
+    const form = $('#addForm');
+    if (form) {
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const inp = $('#nameIn');
+        const name = inp.value.trim();
+        if (!name) return;
+        if (state.players.some(p => p.name.toLowerCase() === name.toLowerCase())) { toast('Den Namen gibt es schon'); return; }
+        const used = state.players.map(p => p.color);
+        const color = COLORS.find(c => !used.includes(c)) || COLORS[state.players.length % COLORS.length];
+        state.players.push({ id: state.nextId++, name, color });
+        save(); render();
+        $('#nameIn').focus();
+      });
+      if (!state.players.length) setTimeout(() => $('#nameIn') && $('#nameIn').focus(), 50);
+    }
+    const si = $('#scoreIn');
+    if (si) {
+      si.addEventListener('input', () => {
+        si.value = si.value.replace(/[^0-9]/g, '').slice(0, 5);
+        ui.entry = si.value;
+        if (ui.hint) { ui.hint = ''; $('#hint').textContent = ''; }
+      });
+      si.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submitTurn(); } });
+    }
+  }
+
+  const actions = {
+    up: id => {
+      const i = state.players.findIndex(p => p.id === id);
+      if (i > 0) [state.players[i - 1], state.players[i]] = [state.players[i], state.players[i - 1]];
+      save(); render();
+    },
+    del: id => { state.players = state.players.filter(p => p.id !== id); save(); render(); },
+    toStart: () => { state.phase = 'start'; ui.starter = null; save(); render(); },
+    toSetup: () => { state.phase = 'setup'; save(); render(); },
+    pick: id => { ui.starter = id; vibrate(10); render(); },
+    random: () => {
+      let steps = 10 + Math.floor(Math.random() * state.players.length), i = 0;
+      const spin = () => {
+        ui.starter = state.players[Math.floor(Math.random() * state.players.length)].id;
+        render(); vibrate(8);
+        if (++i < steps) setTimeout(spin, 60 + i * 12);
+        else toast(`${player(ui.starter).name} beginnt! 🎲`);
+      };
+      spin();
+    },
+    begin: () => {
+      const ids = state.players.map(p => p.id);
+      const s = ids.indexOf(ui.starter);
+      state.order = ids.slice(s).concat(ids.slice(0, s));
+      state.turns = []; state.winner = null; state.phase = 'game';
+      ui.entry = ''; ui.plusMinus = false; ui.hint = '';
+      save(); render(); window.scrollTo(0, 0);
+    },
+    add: v => { ui.entry = String((Number(ui.entry) || 0) + Number(v)); ui.hint = ''; vibrate(8); render(); },
+    clear: () => { ui.entry = ''; ui.hint = ''; render(); },
+    bust: () => { ui.entry = '0'; ui.plusMinus = false; submitTurn(); },
+    skip: () => { ui.entry = ''; ui.plusMinus = false; submitTurn({ skip: true }); },
+    // Plus/Minus bringt laut Regel genau 1000 Punkte – die werden direkt eingetragen
+    pm: () => {
+      ui.plusMinus = !ui.plusMinus;
+      ui.entry = ui.plusMinus ? '1000' : (ui.entry === '1000' ? '' : ui.entry);
+      ui.hint = ''; render();
+    },
+    clover: () => { ui.modal = 'clover'; render(); },
+    cloverYes: () => { ui.modal = null; submitTurn({ clover: true }); },
+    submit: () => submitTurn(),
+    undo: () => undo(),
+    menu: () => { ui.modal = 'menu'; render(); },
+    showWin: () => { ui.modal = 'win'; render(); },
+    close: () => { ui.modal = null; render(); },
+    rematch: () => {
+      state.turns = []; state.winner = null; state.order = [];
+      state.phase = 'start'; ui.starter = null; ui.modal = null;
+      save(); render(); window.scrollTo(0, 0);
+    },
+    newPlayers: () => {
+      state.turns = []; state.winner = null; state.order = []; state.phase = 'setup';
+      ui.modal = null; save(); render(); window.scrollTo(0, 0);
+    },
+  };
+
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-act], [data-stop]');
+    if (!el || el.hasAttribute('data-stop') && !el.dataset.act) return;
+    const act = el.dataset.act;
+    if (!actions[act]) return;
+    e.preventDefault();
+    const arg = el.dataset.id ? Number(el.dataset.id) : el.dataset.v;
+    actions[act](arg);
+  });
+
+  // ---------- Konfetti ----------
+  function confetti() {
+    const cv = $('#confetti'), ctx = cv.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; ctx.scale(dpr, dpr);
+    const cols = ['#e8b33a', '#f6d27a', '#fbf6ea', '#e4572e', '#2e86ab', '#16a085', '#d81b60'];
+    const parts = Array.from({ length: 160 }, () => ({
+      x: innerWidth / 2 + (Math.random() - .5) * 80, y: innerHeight * .35,
+      vx: (Math.random() - .5) * 14, vy: -Math.random() * 14 - 4,
+      s: 5 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - .5) * .3,
+      c: cols[Math.floor(Math.random() * cols.length)],
+    }));
+    const start = performance.now();
+    (function frame(now) {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      parts.forEach(p => {
+        p.vy += .35; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+        ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore();
+      });
+      if (now - start < 3500) requestAnimationFrame(frame);
+      else ctx.clearRect(0, 0, innerWidth, innerHeight);
+    })(start);
+  }
+
+  // ---------- Android-Zurück-Taste ----------
+  // Wird von der WebView-Hülle aufgerufen; true = erledigt, false = App schließen.
+  window.tuttoBack = () => {
+    if (ui.modal) { actions.close(); return true; }
+    if (state.phase === 'start') { actions.toSetup(); return true; }
+    if (state.phase === 'game' || state.phase === 'end') { actions.menu(); return true; }
+    return false;
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>

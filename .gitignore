@@ -1,0 +1,6 @@
+# Build-Ausgaben (APK wird über GitHub Releases verteilt)
+*.apk
+*.idsig
+android/app/build/
+# wird beim Build aus www/ gespiegelt
+android/app/assets/
