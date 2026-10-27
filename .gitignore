@@ -4,3 +4,5 @@
 android/app/build/
 # wird beim Build aus www/ gespiegelt
 android/app/assets/
+android/app/build-aab/
+*.aab

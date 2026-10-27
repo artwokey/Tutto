@@ -1,6 +1,8 @@
-# Tutto 🎲
+# Punktezähler für Tutto 🎲
 
 Der Punktezähler für das Würfelspiel **Tutto** – als Android-App. Wer zuerst **6.000 Punkte** hat, gewinnt.
+
+> Inoffizieller Punktezähler, nicht verbunden mit dem Hersteller des Spiels „Tutto“. Alle Marken gehören ihren jeweiligen Inhabern.
 
 ## Funktionen
 - Mitspieler in Sitzreihenfolge eintragen (umsortieren, entfernen)
@@ -22,7 +24,10 @@ Auf dem Handy die Installation aus unbekannten Quellen erlauben und die APK öff
 | `www/index.html` | die komplette App (HTML, CSS, JavaScript) |
 | `android/app/` | schlanke WebView-Hülle (Manifest, `MainActivity.java`, Icons) |
 | `android/build-apk.ps1` | baut die APK ohne Gradle (aapt → javac → d8 → zipalign → apksigner) |
-| `android/make-assets.ps1` | erzeugt die Launcher-Icons |
+| `android/build-aab.ps1` | baut das signierte App-Bundle (.aab) für Google Play |
+| `android/make-assets.ps1` | erzeugt Launcher-Icons, Store-Icon und Feature-Grafik |
+| `store/` | Grafiken und Screenshots für Google Play, Anleitung in [STORE.md](STORE.md) |
+| `docs/` | Datenschutzerklärung (GitHub Pages) |
 
 Zum Bauen wird eine lokale Toolchain mit JDK 17, Android build-tools 34 und android-34 benötigt (Pfade oben im Build-Skript).
 Zum Testen im Browser reicht es, `www/index.html` über einen lokalen Webserver zu öffnen.

@@ -2,16 +2,22 @@ package com.rene.tutto;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.view.WindowInsets;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
 
 /**
- * Tutto — schlanke WebView-Hülle, die den Punkteblock aus den App-Assets lädt.
+ * Punktezähler für Tutto — schlanke WebView-Hülle, die den Punkteblock aus den App-Assets lädt.
  * Der Spielstand liegt im localStorage der WebView und bleibt so erhalten.
  */
 public class MainActivity extends Activity {
@@ -39,7 +45,32 @@ public class MainActivity extends Activity {
         web.setWebViewClient(new WebViewClient());
         web.setWebChromeClient(new WebChromeClient());
 
-        setContentView(web);
+        // Ab Android 15 zeichnet die App randlos: Status-/Navigationsleiste und Tastatur freihalten
+        FrameLayout root = new FrameLayout(this);
+        root.setBackgroundColor(FELT);
+        root.addView(web);
+        if (Build.VERSION.SDK_INT >= 35) {
+            root.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+                @Override
+                public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+                    Insets i = insets.getInsets(WindowInsets.Type.systemBars()
+                            | WindowInsets.Type.displayCutout() | WindowInsets.Type.ime());
+                    v.setPadding(i.left, i.top, i.right, i.bottom);
+                    return WindowInsets.CONSUMED;
+                }
+            });
+        }
+        setContentView(root);
+
+        // Ab Android 13 kommt die Zurück-Geste hierüber (onBackPressed wird ab Ziel-API 36 nicht mehr gerufen)
+        if (Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                    new OnBackInvokedCallback() {
+                        @Override
+                        public void onBackInvoked() { handleBack(); }
+                    });
+        }
 
         if (savedInstanceState == null) {
             web.loadUrl("file:///android_asset/app/index.html");
@@ -58,13 +89,17 @@ public class MainActivity extends Activity {
         web.restoreState(savedInstanceState);
     }
 
-    // Zurück-Taste zuerst an die Web-App geben (Dialog schließen, Menü öffnen …)
     @Override
     public void onBackPressed() {
+        handleBack();
+    }
+
+    // Zurück zuerst an die Web-App geben (Dialog schließen, Menü öffnen …), sonst App schließen
+    private void handleBack() {
         web.evaluateJavascript("window.tuttoBack ? String(window.tuttoBack()) : 'false'", new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String handled) {
-                if (!"\"true\"".equals(handled)) MainActivity.super.onBackPressed();
+                if (!"\"true\"".equals(handled)) finish();
             }
         });
     }

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#0f3d2e">
-<title>Tutto</title>
+<title>Punktezähler für Tutto</title>
 <style>
   :root {
     --felt: #0f3d2e;
@@ -225,6 +225,7 @@
   tfoot td.lead::before { content: "👑 "; font-size: 13px; }
 
   .foot-actions { display: flex; gap: 10px; margin-top: 4px; }
+  .legal { margin-top: 22px; text-align: center; font-size: 11px; line-height: 1.5; color: var(--cream); opacity: .45; }
   .foot-actions .btn { flex: 1; font-size: 15px; padding: 12px; }
 
   /* ---------- Modal / Winner ---------- */
@@ -266,7 +267,7 @@
 
 <script>
 (() => {
-  const VERSION = '1.1.0';
+  const VERSION = '1.2.0';
   const TARGET = 6000;
   const STORE_KEY = 'tutto-state-v1';
   const COLORS = ['#e4572e', '#2e86ab', '#8e44ad', '#f39c12', '#16a085', '#d81b60', '#6d4c41', '#3949ab', '#7cb342', '#00897b'];
@@ -378,17 +379,19 @@
   function render() {
     const app = $('#app');
     const html = { setup: renderSetup, start: renderStart, game: renderGame, end: renderGame }[state.phase]();
-    app.innerHTML = html + renderModal();
+    app.innerHTML = html + LEGAL + renderModal();
     // Einblend-Animation nur beim Wechsel des Bildschirms, nicht bei jedem Eintrag
     if (render.phase !== state.phase) $('.screen', app).classList.add('enter');
     render.phase = state.phase;
     bind();
   }
 
+  const LEGAL = `<footer class="legal">Inoffizieller Punktezähler, nicht verbunden mit dem Hersteller des Spiels „Tutto“.<br>Alle Marken gehören ihren jeweiligen Inhabern.</footer>`;
+
   function brand(right = '') {
     return `<header class="brand">
       <div class="die"><i></i><i></i><i></i><i></i><i></i></div>
-      <div><h1>Tutto</h1><small>Punkteblock · Ziel ${fmt(TARGET)} · v${VERSION}</small></div>
+      <div><h1>Punktezähler</h1><small>für Tutto · Ziel ${fmt(TARGET)} · v${VERSION}</small></div>
       <div class="spacer"></div>${right}
     </header>`;
   }
